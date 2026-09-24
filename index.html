@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="DutyTracker.AI - ระบบตรวจเวรห้องเรียนอัจฉริยะ">
+  <title>DutyTracker.AI | ตรวจเวร.ai</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <div>
+          <h1>DutyTracker.AI</h1>
+          <p>ตรวจเวร.ai · ระบบตรวจความสะอาดห้องเรียนอัจฉริยะ</p>
+        </div>
+      </div>
+      <div class="header-badge">LOCAL AI</div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">SMART CLASSROOM INSPECTION</span>
+          <h2>ตรวจเวรให้เร็วขึ้น<br><span>ด้วย AI ในเบราว์เซอร์</span></h2>
+          <p>ถ่ายภาพหรือเลือกรูปห้องเรียน ระบบจะวิเคราะห์ด้วย Teachable Machine บนอุปกรณ์ของคุณ และบันทึกผลลง Google Sheets</p>
+        </div>
+        <div class="hero-stat">
+          <strong>28</strong>
+          <span>นักเรียน</span>
+          <small>1 ห้องเรียน · 1 ครูประจำชั้น</small>
+        </div>
+      </section>
+
+      <form id="inspectionForm" novalidate>
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <span class="step">01</span>
+              <h3>ข้อมูลผู้ตรวจเวร</h3>
+            </div>
+            <span class="required-note">* จำเป็น</span>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>รหัสนักเรียน <b>*</b></span>
+              <input id="studentId" name="studentId" type="text" inputmode="numeric" placeholder="เช่น 0006" maxlength="30" required>
+            </label>
+
+            <label class="field">
+              <span>ชื่อ - นามสกุล <b>*</b></span>
+              <input id="studentName" name="studentName" type="text" placeholder="กรอกชื่อผู้ตรวจเวร" maxlength="100" required>
+            </label>
+
+            <label class="field field-full">
+              <span>นักเรียนที่ขาดเวร</span>
+              <textarea id="absentStudents" name="absentStudents" rows="3" maxlength="500" placeholder="เช่น 0003, 0012, 0020 หรือเว้นว่างหากไม่มี"></textarea>
+              <small>สามารถกรอกรหัสหรือชื่อ คั่นด้วยเครื่องหมายจุลภาค</small>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <span class="step">02</span>
+              <h3>ภาพห้องเรียน</h3>
+            </div>
+            <span class="privacy-badge">วิเคราะห์ในเครื่อง</span>
+          </div>
+
+          <label class="upload-zone" for="imageInput" id="uploadZone">
+            <input id="imageInput" type="file" accept="image/*" capture="environment">
+            <div class="upload-icon">📷</div>
+            <strong>ถ่ายภาพหรือเลือกรูปภาพ</strong>
+            <span>JPG, PNG หรือ WebP · แนะนำภาพแนวนอน</span>
+            <span class="upload-button">เลือกภาพ</span>
+          </label>
+
+          <div class="preview-wrap hidden" id="previewWrap">
+            <div class="preview-toolbar">
+              <span id="fileName">ภาพที่เลือก</span>
+              <button type="button" class="text-button" id="removeImage">เปลี่ยนภาพ</button>
+            </div>
+            <div class="image-stage">
+              <img id="imagePreview" alt="ตัวอย่างภาพห้องเรียน">
+              <canvas id="analysisCanvas" class="hidden"></canvas>
+              <div class="image-loading hidden" id="imageLoading">
+                <div class="spinner"></div>
+                <span>กำลังวิเคราะห์ภาพ...</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card ai-card">
+          <div class="section-heading">
+            <div>
+              <span class="step">03</span>
+              <h3>ผลการวิเคราะห์จาก AI</h3>
+            </div>
+            <span class="ai-status" id="aiStatus">รอภาพ</span>
+          </div>
+
+          <div class="result-grid">
+            <div class="score-ring" id="scoreRing" style="--score: 0deg;">
+              <div class="score-inner">
+                <span id="scoreValue">--</span>
+                <small>%</small>
+              </div>
+            </div>
+
+            <div class="result-copy">
+              <span class="result-label">Cleanliness Score</span>
+              <h4 id="aiFeedback">อัปโหลดภาพเพื่อเริ่มการตรวจ</h4>
+              <p id="aiExplanation">AI จะประเมินภาพจากโมเดล Teachable Machine ที่ตั้งค่าไว้ใน script.js</p>
+              <div class="predictions" id="predictions"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card submit-card">
+          <div class="submit-info">
+            <span class="submit-icon">☁</span>
+            <div>
+              <h3>บันทึกผลการตรวจ</h3>
+              <p>ส่งเวลา ผู้ตรวจ นักเรียนที่ขาด คะแนน Feedback และข้อมูลภาพไปยัง Google Sheets ผ่าน Google Apps Script</p>
+            </div>
+          </div>
+          <button class="primary-button" id="submitBtn" type="submit" disabled>
+            <span>บันทึกผลตรวจ</span>
+            <span class="button-arrow">→</span>
+          </button>
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        </section>
+      </form>
+    </main>
+
+    <footer>
+      <span>DutyTracker.AI</span>
+      <span>•</span>
+      <span>AI วิเคราะห์ภายในเบราว์เซอร์ · Google Sheets สำหรับบันทึกผล</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
