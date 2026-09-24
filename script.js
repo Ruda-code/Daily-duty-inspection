@@ -4,8 +4,8 @@
  * แล้วส่งรายงานไปยัง Google Apps Script Web App
  */
 
-const MODEL_URL = "YOUR_TEACHABLE_MACHINE_URL";
-const GAS_WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+const MODEL_URL = "https://teachablemachine.withgoogle.com/models/KUyrG8LMir/";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwDraqVa3AwIdgPCVCOCFxicaTr2jnortHZCLLVlAATamjZ1MHMcVWWnOAx257bZvuZ/exec";
 
 const CLEAN_LABELS = [
   "clean", "สะอาด", "tidy", "good", "เรียบร้อย", "clean classroom", "สะอาดเรียบร้อย"
