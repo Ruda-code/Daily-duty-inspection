@@ -5,7 +5,7 @@
  */
 
 const MODEL_URL = "https://teachablemachine.withgoogle.com/models/KUyrG8LMir/";
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwDraqVa3AwIdgPCVCOCFxicaTr2jnortHZCLLVlAATamjZ1MHMcVWWnOAx257bZvuZ/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby-w2sIiaRNt49uskrFbFphkBJvMibFP9sHVPPh0FnsG2W10mrNIKgKlJr2Vvxx5if_/exec";
 
 const CLEAN_LABELS = [
   "clean", "สะอาด", "tidy", "good", "เรียบร้อย", "clean classroom", "สะอาดเรียบร้อย"
